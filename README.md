@@ -22,3 +22,7 @@ $REST_API_ID = [regex]::Match($log, 'restapis/([a-z0-9]+)/dev').Groups[1].Value
 
 aws --endpoint-url=http://localhost:4566 --output json s3 mb s3://mi-app-web 2>$null
 aws --endpoint-url=http://localhost:4566 --output json s3 sync public/ s3://mi-app-web
+
+#5 Abrir en el navegador 
+
+http://localhost:4566/mi-app-web/index.html
