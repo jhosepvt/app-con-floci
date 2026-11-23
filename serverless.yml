@@ -1,0 +1,57 @@
+service: app-tareas-floci
+
+frameworkVersion: '>=3.0.0'
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: us-east-1
+
+plugins:
+  - serverless-localstack
+
+custom:
+  localstack:
+    stages:
+      - dev
+    host: http://localhost
+    edgePort: '4566'
+
+functions:
+  getTareas:
+    handler: handler.getTareas
+    events:
+      - http:
+          path: api/tareas-dynamo
+          method: get
+          cors: true
+
+  createTarea:
+    handler: handler.createTarea
+    events:
+      - http:
+          path: api/tareas-dynamo
+          method: post
+          cors: true
+
+  eliminarTarea:
+    handler: handler.eliminarTarea
+    events:
+      - http:
+          path: api/tareas-dynamo/{id}
+          method: delete
+          cors: true
+
+resources:
+  Resources:
+    TareasTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: Tareas
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
